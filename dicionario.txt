@@ -1,0 +1,3 @@
+﻿1;teste;testes de termos; fontes
+2;outro;testes de palavras; fontes
+3;novamente;palavras de termo; fontes

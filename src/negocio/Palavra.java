@@ -12,12 +12,13 @@ package negocio;
 public class Palavra {
     
     private String termo;
-    private String significado;
+    private String definicao;
     private String fonte;
+    private static int codigo = 0;
     
     public Palavra(String t, String s, String f){
         this.termo = t;
-        this.significado = s;
+        this.definicao = s;
         this.fonte = f;
     }
     
@@ -28,12 +29,12 @@ public class Palavra {
     public String getTermo(){
         return termo;
     }
-    public void setSignificado(String s){
-        this.significado = s;
+    public void setDefinicao(String s){
+        this.definicao = s;
     }
     
-    public String getSignificado(){
-        return significado;
+    public String getDefinicao(){
+        return definicao;
     }
     public void setFonte(String f){
         this.fonte = f;
@@ -41,6 +42,10 @@ public class Palavra {
     
     public String getFonte(){
         return fonte;
+    }
+    
+    public int getCodigo(){
+        return codigo;
     }
     
 }

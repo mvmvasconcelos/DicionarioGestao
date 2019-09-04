@@ -5,11 +5,18 @@
  */
 package controle;
 
+import javax.swing.JOptionPane;
 /**
  *
  * @author marcus.vasconcelos
  */
 public class Controlador {
+    
+    private final char[] alfabeto = "#ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+    
+    public char[] getAlfabeto(){
+        return alfabeto;
+    }
     
     /** Método para cadastrar novo usuário
      * 
@@ -46,7 +53,32 @@ public class Controlador {
      * 
      */
     public void consultarTudo(){
-        
+       // limpa area de texto
+        //txaConteudoArquivo.setText("");
+        System.out.println("OI");
+        ControlePalavra ctlPalavra = new ControlePalavra();
+
+        String conteudo = ctlPalavra.consultar("");
+
+        if (conteudo != null) {
+            System.out.println(conteudo);
+            //txaConteudoArquivo.setText(conteudo);
+        } else {
+            JOptionPane.showMessageDialog(null, "Ops, problemas ao LER arquivo!");
+        } 
+    }
+    
+    public void consultar(String s){
+        ControlePalavra ctlPalavra = new ControlePalavra();
+
+        String conteudo = ctlPalavra.consultar(s);
+
+        if (conteudo != null) {
+            System.out.println(conteudo);
+            //txaConteudoArquivo.setText(conteudo);
+        } else {
+            JOptionPane.showMessageDialog(null, "Ops, problemas ao LER arquivo!");
+        } 
     }
     
     /** Método para limpar a consulta atual
