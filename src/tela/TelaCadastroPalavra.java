@@ -5,16 +5,24 @@
  */
 package tela;
 
+import controle.Controlador;
+
 /**
  *
  * @author vinicius
  */
 public class TelaCadastroPalavra extends javax.swing.JFrame {
+    Controlador controlador = new Controlador();
+
     /**
      * Creates new form TelaCadastroPalavra
      */
     public TelaCadastroPalavra() {
         initComponents();
+    }
+    
+    private void cadastraPalavra(String termo, String definicao, String fonte){
+        controlador.cadastraNovaPalavra(termo, definicao, fonte);
     }
 
     /**
@@ -35,7 +43,7 @@ public class TelaCadastroPalavra extends javax.swing.JFrame {
         txtFonte = new javax.swing.JTextArea();
         btnCadastrar = new javax.swing.JButton();
         btnLimpar = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnVoltar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de novo Termo | Dicionário de Gestão");
@@ -56,6 +64,11 @@ public class TelaCadastroPalavra extends javax.swing.JFrame {
         txtFonte.setRows(5);
 
         btnCadastrar.setText("Cadastrar");
+        btnCadastrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCadastrarActionPerformed(evt);
+            }
+        });
 
         btnLimpar.setText("Limpar");
         btnLimpar.addActionListener(new java.awt.event.ActionListener() {
@@ -64,10 +77,10 @@ public class TelaCadastroPalavra extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Voltar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnVoltar.setText("Voltar");
+        btnVoltar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnVoltarActionPerformed(evt);
             }
         });
 
@@ -92,7 +105,7 @@ public class TelaCadastroPalavra extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnLimpar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)))
+                        .addComponent(btnVoltar, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -114,7 +127,7 @@ public class TelaCadastroPalavra extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCadastrar)
                     .addComponent(btnLimpar)
-                    .addComponent(jButton1))
+                    .addComponent(btnVoltar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -122,15 +135,19 @@ public class TelaCadastroPalavra extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnVoltarActionPerformed
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
         txtTermo.setText("");
         txtDefinicao.setText("");
         txtFonte.setText("");        
     }//GEN-LAST:event_btnLimparActionPerformed
+
+    private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
+        cadastraPalavra(txtTermo.getText(), txtDefinicao.getText(), txtFonte.getText());
+    }//GEN-LAST:event_btnCadastrarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -170,7 +187,7 @@ public class TelaCadastroPalavra extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCadastrar;
     private javax.swing.JButton btnLimpar;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnVoltar;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblDefinicao;
     private javax.swing.JLabel lblFonte;

@@ -8,8 +8,11 @@ package tela;
 import controle.Controlador;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import negocio.Palavra;
 
 /**
  *
@@ -17,6 +20,8 @@ import javax.swing.JOptionPane;
  */
 public class TelaPrincipal extends javax.swing.JFrame {
     Controlador controlador = new Controlador();
+    ArrayList<Palavra> lista = new ArrayList<>();
+    DefaultTableModel tabela; //Cria modelo de tabela
     
     /**
      * Creates new form TelaPrincipal
@@ -24,7 +29,62 @@ public class TelaPrincipal extends javax.swing.JFrame {
     public TelaPrincipal() {
         initComponents();
         criaLetrasAlfabeto();
-        controlador.consultar("pal");
+        consultarLista();
+    }
+    
+    //Consulta a lista de palavras
+    private void consultarLista(){
+        //Se a lista não estiver vazia
+        lista = controlador.consultarTermo().getPalavra();        
+        montaTabela();              
+    }
+    
+    //Consulta a lista de palavras por letra
+    private void consultarLista(String palavra){
+        lista = controlador.consultarTermo(palavra).getPalavra(); 
+        System.out.println("tamanho lista" + lista.size());
+        montaTabela();  
+    }
+    
+    private void montaTabela(){
+        if (lista.size() > 0) {
+            //limparLista();
+            //Recria a tabela caso ela tenha sido modificada
+            tabelaPrincipal.setModel(new javax.swing.table.DefaultTableModel(
+                new Object [][] {},
+                new String [] {
+                     "Termo", "Significado", "Fonte", "Código"
+                })
+                {
+                boolean[] canEdit = new boolean [] {
+                    false, false, false, false
+                };
+
+                @Override
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit [columnIndex];
+                }}
+            );
+            
+            //define a tabela com o mesmo modelo da tabelaListagem criado no design
+            tabela = (DefaultTableModel) tabelaPrincipal.getModel();
+
+            //Cria um objeto dadosLinha, onde cada posição é será coluna
+            Object dadosLinha[] = new Object[4];
+
+            //percorre o lista e popula as colunas de acordo com a posicao
+            for (int i = 0; i < lista.size(); i++) {
+                dadosLinha[0] = lista.get(i).getTermo();
+                dadosLinha[1] = lista.get(i).getDefinicao();
+                dadosLinha[2] = lista.get(i).getFonte();
+                dadosLinha[3] = lista.get(i).getCodigo();
+                //Adiciona os dados à linha na tabela
+                tabela.addRow(dadosLinha);
+            }  
+        } else { //Se estiver vazia, avisa o usuário
+            //exibirMensagem();
+            JOptionPane.showMessageDialog(this, "Nenhum termo encontrado");
+        }  
     }
     
     private void criaLetrasAlfabeto(){
@@ -47,6 +107,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             
             //Adiciona listener para cada botão de letra
             botaoLetra.addActionListener((arg0) -> {
+                consultarLista(letra);
             });
         }
         pack();
@@ -102,6 +163,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         lblPesquisar.setText("Pesquisar");
 
         btnPesquisar.setText("Pesquisar");
+        btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPesquisarActionPerformed(evt);
+            }
+        });
 
         tabelaPrincipal.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -126,7 +192,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         menuArquivo.setText("Arquivo");
 
-        menuArquivoNovo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, 0));
+        menuArquivoNovo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         menuArquivoNovo.setText("Novo Termo");
         menuArquivoNovo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -135,7 +201,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         });
         menuArquivo.add(menuArquivoNovo);
 
-        menuArquivoSair.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, 0));
+        menuArquivoSair.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
         menuArquivoSair.setText("Sair");
         menuArquivoSair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -216,6 +282,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
         TelaCadastroPalavra tela = new TelaCadastroPalavra();
         tela.setVisible(true);
     }//GEN-LAST:event_menuArquivoNovoActionPerformed
+
+    private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
+        consultarLista(txtPesquisar.getText());
+    }//GEN-LAST:event_btnPesquisarActionPerformed
 
     /**
      * @param args the command line arguments

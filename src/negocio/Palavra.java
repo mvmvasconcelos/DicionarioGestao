@@ -14,12 +14,15 @@ public class Palavra {
     private String termo;
     private String definicao;
     private String fonte;
-    private static int codigo = 0;
+    private int codigo;
+    private static int id = 0;
     
-    public Palavra(String t, String s, String f){
-        this.termo = t;
-        this.definicao = s;
-        this.fonte = f;
+    public Palavra(String termo, String definicao, String fonte){
+        this.termo = termo;
+        this.definicao = definicao;
+        this.fonte = fonte;
+        this.codigo = id;
+        id++;
     }
     
     public void setTermo(String t){

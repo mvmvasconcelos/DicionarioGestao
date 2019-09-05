@@ -34,7 +34,7 @@ public class Arquivo {
         boolean sucesso = true;
         FileReader fileReader = null;
         if (status != 'C') {
-            System.err.println("-- Arquivo \"" + nomeArquivo + "\" já está aberto");
+            System.err.println("-- Arquivo \"" + nomeArquivo + "\" já está aberto leitura");
             sucesso = false;
         } else {
             try {
@@ -58,7 +58,7 @@ public class Arquivo {
         boolean sucesso = true;
         FileWriter fileWriter = null;
         if (status != 'C') {
-            System.err.println("-- Arquivo \"" + nomeArquivo + "\" já está aberto");
+            System.err.println("-- Arquivo \"" + nomeArquivo + "\" já está aberto escrita");
             sucesso = false;
         } else {
             try {
@@ -80,25 +80,6 @@ public class Arquivo {
         String linha = null;
         if (status == 'R') {
             try {
-                linha = bufferedReader.readLine();
-            } catch (IOException e) {
-                System.err.println("-- Erro de leitura no arquivo \"" + nomeArquivo + "\"");
-            }
-        } else {
-            System.err.println("-- Arquivo \"" + nomeArquivo + "\" não está pronto para leitura");
-        }
-        return (linha);
-    }
-    
-    public String lerLinhas(String letra){
-        String linha = null;
-        if (status == 'R') {
-            try {
-                while((linha = bufferedReader.readLine()) != null){
-                    if (linha.contains(letra)) {
-                        System.out.println(linha);
-                    }
-                }
                 linha = bufferedReader.readLine();
             } catch (IOException e) {
                 System.err.println("-- Erro de leitura no arquivo \"" + nomeArquivo + "\"");

@@ -12,5 +12,13 @@ import java.util.ArrayList;
  * @author marcus.vasconcelos
  */
 public class Dicionario {
-    public ArrayList<Palavra> listaPalavras;
+    private ArrayList<Palavra> listaPalavras = new ArrayList<>();
+    
+    public void setPalavra(Palavra lista){
+        listaPalavras.add(lista);
+    }
+    
+    public ArrayList<Palavra> getPalavra(){
+        return listaPalavras;
+    }
 }

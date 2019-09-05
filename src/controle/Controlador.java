@@ -6,11 +6,15 @@
 package controle;
 
 import javax.swing.JOptionPane;
+import negocio.Dicionario;
+import negocio.Palavra;
 /**
  *
  * @author marcus.vasconcelos
  */
 public class Controlador {
+    Dicionario dicionarioTemp = new Dicionario();
+    static ControlePalavra ctlPalavra = new ControlePalavra();
     
     private final char[] alfabeto = "#ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
     
@@ -33,52 +37,48 @@ public class Controlador {
     
     /** Método para cadastrar nova palavra
      * 
-     * @param t - termo
-     * @param s - significado
-     * @param f - fonte
+     * @param termo
+     * @param definicao
+     * @param fonte
      */
-    public void cadastraNovaPalavra(String t, String s, String f){
-        
+    public void cadastraNovaPalavra(String termo, String definicao, String fonte){
+        ctlPalavra.salvar(new Palavra(termo, definicao, fonte));
     }
     
-    /** Método para pesquisar palavra digitada pelo usuario
-     * 
-     * @param p - termo, parte do termo ou do significado
-     */
-    public void pesquisaPalavra(String p){
-        
-    }
-    
-    /**Método para buscar todos os termos do dicionário e imprimir em tela
-     * 
-     */
-    public void consultarTudo(){
-       // limpa area de texto
-        //txaConteudoArquivo.setText("");
-        System.out.println("OI");
-        ControlePalavra ctlPalavra = new ControlePalavra();
-
-        String conteudo = ctlPalavra.consultar("");
-
-        if (conteudo != null) {
-            System.out.println(conteudo);
-            //txaConteudoArquivo.setText(conteudo);
+    public Dicionario consultarTermo(){        
+        dicionarioTemp = ctlPalavra.consultarDicionario();
+        if (dicionarioTemp != null) {
+            return dicionarioTemp;
         } else {
             JOptionPane.showMessageDialog(null, "Ops, problemas ao LER arquivo!");
-        } 
+            return null;
+        }
     }
     
-    public void consultar(String s){
-        ControlePalavra ctlPalavra = new ControlePalavra();
+    public Dicionario consultarTermo(String palavra){
+        if (palavra.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Nenhum termo digitado");
+            return null;
 
-        String conteudo = ctlPalavra.consultar(s);
-
-        if (conteudo != null) {
-            System.out.println(conteudo);
-            //txaConteudoArquivo.setText(conteudo);
+        } else if (palavra.length() == 1) {
+            dicionarioTemp = ctlPalavra.consultarPorLetra(palavra);
+            System.out.println("Consulta letra");
+            if (dicionarioTemp != null) {
+                return dicionarioTemp;
+            } else {
+                JOptionPane.showMessageDialog(null, "Ops, problemas ao LER arquivo!");
+                return null;
+            }
         } else {
-            JOptionPane.showMessageDialog(null, "Ops, problemas ao LER arquivo!");
-        } 
+            dicionarioTemp = ctlPalavra.consultarPorTermo(palavra);
+            System.out.println("Consulta palavra");
+            if (dicionarioTemp != null) {
+                return dicionarioTemp;
+            } else {
+                JOptionPane.showMessageDialog(null, "Ops, problemas ao LER arquivo!");
+                return null;
+            }
+        }
     }
     
     /** Método para limpar a consulta atual
