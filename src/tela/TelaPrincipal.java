@@ -9,6 +9,7 @@ import controle.Controlador;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
+import java.util.Collections;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -30,18 +31,21 @@ public class TelaPrincipal extends javax.swing.JFrame {
         initComponents();
         criaLetrasAlfabeto();
         consultarLista();
+       // adicionaQuebraDeLinha();
     }
     
     //Consulta a lista de palavras
     private void consultarLista(){
         //Se a lista não estiver vazia
-        lista = controlador.consultarTermo().getPalavra();        
+        lista = controlador.consultarTermo().getPalavra();
+        Collections.sort(lista, Palavra.comparadorTermo);
         montaTabela();              
     }
     
     //Consulta a lista de palavras por letra
     private void consultarLista(String palavra){
         lista = controlador.consultarTermo(palavra).getPalavra(); 
+        Collections.sort(lista, Palavra.comparadorTermo);
         System.out.println("tamanho lista" + lista.size());
         montaTabela();  
     }
@@ -49,15 +53,15 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private void montaTabela(){
         if (lista.size() > 0) {
             //limparLista();
-            //Recria a tabela caso ela tenha sido modificada
+            //Recria a tabela caso ela tenha sido modificada            
             tabelaPrincipal.setModel(new javax.swing.table.DefaultTableModel(
                 new Object [][] {},
                 new String [] {
-                     "Termo", "Significado", "Fonte", "Código"
+                     "Termo", "Significado", "Fonte"
                 })
                 {
                 boolean[] canEdit = new boolean [] {
-                    false, false, false, false
+                    false, false, false
                 };
 
                 @Override
@@ -65,26 +69,58 @@ public class TelaPrincipal extends javax.swing.JFrame {
                     return canEdit [columnIndex];
                 }}
             );
-            
-            //define a tabela com o mesmo modelo da tabelaListagem criado no design
+            //define a tabela com o mesmo modelo da tabelaListagem
             tabela = (DefaultTableModel) tabelaPrincipal.getModel();
 
             //Cria um objeto dadosLinha, onde cada posição é será coluna
-            Object dadosLinha[] = new Object[4];
-
+            Object dadosLinha[] = new Object[3];
             //percorre o lista e popula as colunas de acordo com a posicao
             for (int i = 0; i < lista.size(); i++) {
                 dadosLinha[0] = lista.get(i).getTermo();
-                dadosLinha[1] = lista.get(i).getDefinicao();
+                
+                //dadosLinha[1] = lista.get(i).getDefinicao();
                 dadosLinha[2] = lista.get(i).getFonte();
-                dadosLinha[3] = lista.get(i).getCodigo();
                 //Adiciona os dados à linha na tabela
                 tabela.addRow(dadosLinha);
-            }  
+                /*if (lista.get(i).getDefinicao().length() > 78) {
+                    
+                    
+                    
+                    // current table column width in pixels
+                    int colWidth = tabelaPrincipal.getColumnModel().getColumn(1).getWidth();
+
+                    // set the text area width (height doesn't matter here)
+                    setSize(new Dimension(colWidth, 1)); 
+
+                    // get the text area preferred height and add the row margin
+                    int height = getPreferredSize().height + tabelaPrincipal.getRowMargin();
+                    
+                    tabelaPrincipal.setRowHeight(i, height);
+                }*/
+            }
+            tabelaPrincipal.setAutoResizeMode(3);
+            tabelaPrincipal.getColumnModel().getColumn(0).setPreferredWidth(20);
+            tabelaPrincipal.getColumnModel().getColumn(1).setPreferredWidth(350);
         } else { //Se estiver vazia, avisa o usuário
             //exibirMensagem();
             JOptionPane.showMessageDialog(this, "Nenhum termo encontrado");
         }  
+    }
+    
+    private void adicionaQuebraDeLinha(){
+        //158 caracteres
+        String quebra = "É uma palavra com origem no latim, onde absens significa “estar fora, afastado ou ausente”. O absenteísmo consiste em se abster de alguma atividade ou função.";
+        StringBuilder modificado = new StringBuilder(quebra);
+        int tamanho = 0;
+        if (quebra.length() > 78) {
+            tamanho = (int)(quebra.length() / 78);
+            System.out.println("tamanho " + quebra.length() + ", dá " + tamanho + " pedaços");
+            for (int i = 1; i <= tamanho; i++) {
+                modificado.insert(78*i+2, "<br/>");
+            }
+            
+            JOptionPane.showMessageDialog(this, "<html>" + modificado + "</html>");
+        }
     }
     
     private void criaLetrasAlfabeto(){
@@ -136,9 +172,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
         menuSobre = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(800, 450));
-        setMinimumSize(new java.awt.Dimension(800, 450));
-        setResizable(false);
+        setMaximumSize(new java.awt.Dimension(800, 400));
+        setMinimumSize(new java.awt.Dimension(800, 400));
+        setPreferredSize(new java.awt.Dimension(800, 400));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
@@ -153,7 +189,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         painelLetras.setLayout(painelLetrasLayout);
         painelLetrasLayout.setHorizontalGroup(
             painelLetrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 784, Short.MAX_VALUE)
+            .addGap(0, 790, Short.MAX_VALUE)
         );
         painelLetrasLayout.setVerticalGroup(
             painelLetrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -185,9 +221,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tabelaPrincipal.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
         jScrollPane1.setViewportView(tabelaPrincipal);
         if (tabelaPrincipal.getColumnModel().getColumnCount() > 0) {
+            tabelaPrincipal.getColumnModel().getColumn(0).setResizable(false);
             tabelaPrincipal.getColumnModel().getColumn(0).setPreferredWidth(100);
+            tabelaPrincipal.getColumnModel().getColumn(1).setResizable(false);
+            tabelaPrincipal.getColumnModel().getColumn(1).setPreferredWidth(300);
+            tabelaPrincipal.getColumnModel().getColumn(2).setResizable(false);
         }
 
         menuArquivo.setText("Arquivo");
@@ -238,17 +279,16 @@ public class TelaPrincipal extends javax.swing.JFrame {
                                 .addComponent(btnPesquisar)))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(painelLetras, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap())))
+                        .addComponent(jScrollPane1)
+                        .addContainerGap())
+                    .addComponent(painelLetras, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(painelLetras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblPesquisar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)

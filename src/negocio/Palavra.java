@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package negocio;
+import java.util.Comparator;
+
 
 /**
  *
@@ -50,5 +52,19 @@ public class Palavra {
     public int getCodigo(){
         return codigo;
     }
+    
+    /*Comparador para ordenar os termos em ordem alfabética*/
+    public static Comparator<Palavra> comparadorTermo = new Comparator<Palavra>() {
+
+	public int compare(Palavra s1, Palavra s2) {
+	   String Palavra1 = s1.getTermo().toUpperCase();
+	   String Palavra2 = s2.getTermo().toUpperCase();
+
+	   //ordem crescente
+	   return Palavra1.compareTo(Palavra2);
+
+	   //ordem dcrescente
+	   //return Palavra2.compareTo(Palavra1);
+    }};
     
 }
