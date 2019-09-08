@@ -78,7 +78,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             for (int i = 0; i < lista.size(); i++) {
                 dadosLinha[0] = lista.get(i).getTermo();
                 
-                //dadosLinha[1] = lista.get(i).getDefinicao();
+                dadosLinha[1] = lista.get(i).getDefinicao();
                 dadosLinha[2] = lista.get(i).getFonte();
                 //Adiciona os dados à linha na tabela
                 tabela.addRow(dadosLinha);
