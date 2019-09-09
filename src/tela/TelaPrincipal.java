@@ -222,6 +222,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
             }
         });
         tabelaPrincipal.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
+        tabelaPrincipal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelaPrincipalMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabelaPrincipal);
         if (tabelaPrincipal.getColumnModel().getColumnCount() > 0) {
             tabelaPrincipal.getColumnModel().getColumn(0).setResizable(false);
@@ -326,6 +331,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
         consultarLista(txtPesquisar.getText());
     }//GEN-LAST:event_btnPesquisarActionPerformed
+
+    private void tabelaPrincipalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaPrincipalMouseClicked
+        System.out.println("teste");        // TODO add your handling code here:
+    }//GEN-LAST:event_tabelaPrincipalMouseClicked
 
     /**
      * @param args the command line arguments
