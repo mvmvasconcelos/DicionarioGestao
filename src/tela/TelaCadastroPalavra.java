@@ -6,6 +6,7 @@
 package tela;
 
 import controle.Controlador;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -22,7 +23,20 @@ public class TelaCadastroPalavra extends javax.swing.JFrame {
     }
     
     private void cadastraPalavra(String termo, String definicao, String fonte){
-        controlador.cadastraNovaPalavra(termo, definicao, fonte);
+        if (controlador.validaVazio(termo)) {            
+            JOptionPane.showMessageDialog(this, "O TERMO não pode estar vazio");
+        } else if(controlador.validaRepetido(termo)){
+            JOptionPane.showMessageDialog(this, "Já existe este termo no dicionário");
+        } else if (controlador.validaVazio(definicao)|| definicao.length() < 20){
+            JOptionPane.showMessageDialog(this, "A DEFINIÇÃO não pode estar vazia ou menor que 20 caracteres");        
+        } else if (controlador.validaVazio(fonte) || fonte.length() < 20){
+            JOptionPane.showMessageDialog(this, "A FONTE não pode estar vazia ou menor que 20 caracteres");   
+        } else {
+            controlador.cadastraNovaPalavra(controlador.mudaPontoEVirgula(termo), controlador.mudaPontoEVirgula(definicao), controlador.mudaPontoEVirgula(fonte));
+            JOptionPane.showMessageDialog(this, "Termo cadastrado com sucesso!");
+            dispose();
+        }
+            
     }
 
     /**

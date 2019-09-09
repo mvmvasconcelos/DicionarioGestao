@@ -76,16 +76,16 @@ public class ControlePalavra {
     /**Faz consulta por letra
      * 
      * @param letra - letra recebida no botão
-     * @return apenasLetra - dicionário apenas com os termos da letra especificada
+     * @return apenasId - dicionário apenas com os termos da letra especificada
      */
     public Dicionario consultarPorLetra(String letra){
-        Dicionario apenasLetra = new Dicionario();
+        Dicionario apenasId = new Dicionario();
         for (int i = 0; i < dicionario.getPalavra().size(); i++) {
             if (dicionario.getPalavra().get(i).getTermo().toLowerCase().charAt(0) == letra.toLowerCase().charAt(0)) {
-                apenasLetra.setPalavra(dicionario.getPalavra().get(i));
+                apenasId.setPalavra(dicionario.getPalavra().get(i));
             }
         }
-        return apenasLetra;
+        return apenasId;
     }
     
     /**Faz a consulta pelo termo pesquisado
@@ -102,6 +102,16 @@ public class ControlePalavra {
             }
         }
         return resultadoBusca;
+    }
+    
+    public Dicionario consultarPorId(int id){
+        Dicionario apenasId = new Dicionario();
+        for (int i = 0; i < dicionario.getPalavra().size(); i++) {
+            if (dicionario.getPalavra().get(i).getCodigo() == id) {
+                apenasId.setPalavra(dicionario.getPalavra().get(i));
+            }
+        }
+        return apenasId;
     }
 
     public String consultar(String palavra) {

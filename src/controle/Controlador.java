@@ -55,6 +55,16 @@ public class Controlador {
         }
     }
     
+    public Dicionario consultarTermo(int id){        
+        dicionarioTemp = ctlPalavra.consultarPorId(id);
+        if (dicionarioTemp != null) {
+            return dicionarioTemp;
+        } else {
+            JOptionPane.showMessageDialog(null, "Ops, problemas ao LER arquivo!");
+            return null;
+        }
+    }
+    
     public Dicionario consultarTermo(String palavra){
         if (palavra.isBlank()) {
             JOptionPane.showMessageDialog(null, "Nenhum termo digitado");
@@ -79,22 +89,24 @@ public class Controlador {
                 return null;
             }
         }
-    }
+    }   
     
-    /** Método para limpar a consulta atual
-     * 
-     */
-    public void limparConsulta(){
-        
-    }
     
-    /** Método para validar textFields vazios
+    /** Método para validar campos vazios
      * 
      * @param t - conteúdo do campo
      * @return true or false
      */
     public boolean validaVazio(String t){
-        return false;
+        try {
+            if (t.isBlank() || t.isEmpty()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {            
+            return true;
+        }
     }
     
     /** Método para validar o acesso. Precisará ser feito algo para buscar o
@@ -107,31 +119,23 @@ public class Controlador {
         return false;
     }
     
-    /** Método para validar a próxima palavra a ser cadastrada
-     * 
-     * @param p - palavra recebida no textField
-     * @return true ou false
-     */
-    public boolean validaNovaPalavra(String p){
-        return false;
-    }
-    
-    /** Método para validar se o que tiver sendo cadastrado tem um tamanho
-     * mínimo conforme o tipo do campo. Preciso verificar a possibilidade de 
-     * retornar algum erro específico pra cada caso e true se estiver válido
-     * @param t - texto digitado pelo usuario
-     * @param c - 
-     * @return - Mensagem de erro
-     */
-    public String validaTamanhoString(String t, String c){
-        return "Erro";
-    }
-    
-    /** Método para validar
+    /** Método para validar termos repetidos
      * 
      * @return 
      */
-    public String validaRepetido(){
-        return "Erro";
+    public boolean validaRepetido(String termo){
+        Dicionario dic = ctlPalavra.consultarPorTermo(termo);
+        if (dic.getPalavra().size() >= 0) {
+            for (int i = 0; i < dic.getPalavra().size(); i++) {
+                if (dic.getPalavra().get(i).getTermo().toLowerCase().equals(termo.toLowerCase())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public String mudaPontoEVirgula(String string){        
+        return string.replaceAll(";", ",");
     }
 }

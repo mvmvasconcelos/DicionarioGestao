@@ -6,12 +6,16 @@
 package tela;
 
 import controle.Controlador;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 import negocio.Palavra;
 
@@ -23,6 +27,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     Controlador controlador = new Controlador();
     ArrayList<Palavra> lista = new ArrayList<>();
     DefaultTableModel tabela; //Cria modelo de tabela
+    private int idTermoSelecionado;
     
     /**
      * Creates new form TelaPrincipal
@@ -57,11 +62,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
             tabelaPrincipal.setModel(new javax.swing.table.DefaultTableModel(
                 new Object [][] {},
                 new String [] {
-                     "Termo", "Significado", "Fonte"
+                     "Termo", "id"
                 })
                 {
                 boolean[] canEdit = new boolean [] {
-                    false, false, false
+                    false, false
                 };
 
                 @Override
@@ -73,38 +78,31 @@ public class TelaPrincipal extends javax.swing.JFrame {
             tabela = (DefaultTableModel) tabelaPrincipal.getModel();
 
             //Cria um objeto dadosLinha, onde cada posição é será coluna
-            Object dadosLinha[] = new Object[3];
+            Object dadosLinha[] = new Object[2];
             //percorre o lista e popula as colunas de acordo com a posicao
             for (int i = 0; i < lista.size(); i++) {
                 dadosLinha[0] = lista.get(i).getTermo();
-                
-                dadosLinha[1] = lista.get(i).getDefinicao();
-                dadosLinha[2] = lista.get(i).getFonte();
+                dadosLinha[1] = lista.get(i).getCodigo();
                 //Adiciona os dados à linha na tabela
-                tabela.addRow(dadosLinha);
-                /*if (lista.get(i).getDefinicao().length() > 78) {
-                    
-                    
-                    
-                    // current table column width in pixels
-                    int colWidth = tabelaPrincipal.getColumnModel().getColumn(1).getWidth();
-
-                    // set the text area width (height doesn't matter here)
-                    setSize(new Dimension(colWidth, 1)); 
-
-                    // get the text area preferred height and add the row margin
-                    int height = getPreferredSize().height + tabelaPrincipal.getRowMargin();
-                    
-                    tabelaPrincipal.setRowHeight(i, height);
-                }*/
+                tabela.addRow(dadosLinha);                
             }
             tabelaPrincipal.setAutoResizeMode(3);
-            tabelaPrincipal.getColumnModel().getColumn(0).setPreferredWidth(20);
-            tabelaPrincipal.getColumnModel().getColumn(1).setPreferredWidth(350);
+            tabelaPrincipal.getColumnModel().getColumn(1).setMinWidth(0);
+            tabelaPrincipal.getColumnModel().getColumn(1).setMaxWidth(0);
         } else { //Se estiver vazia, avisa o usuário
             //exibirMensagem();
             JOptionPane.showMessageDialog(this, "Nenhum termo encontrado");
         }  
+    }
+    
+    private void selecionaTermo(int id){
+        lblTermoSelecionado.setText(controlador.consultarTermo(id).getPalavra().get(0).getTermo());
+        txtDefinicaoTermoSelecionado.setText("Definição:\n\n" 
+                                             + controlador.consultarTermo(id).getPalavra().get(0).getDefinicao()
+                                             + "\n\n_______________________________________________"
+                                             + "\nFonte:\n\n"
+                                             + controlador.consultarTermo(id).getPalavra().get(0).getFonte());
+        txtDefinicaoTermoSelecionado.setCaretPosition(0);
     }
     
     private void adicionaQuebraDeLinha(){
@@ -117,8 +115,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             System.out.println("tamanho " + quebra.length() + ", dá " + tamanho + " pedaços");
             for (int i = 1; i <= tamanho; i++) {
                 modificado.insert(78*i+2, "<br/>");
-            }
-            
+            }            
             JOptionPane.showMessageDialog(this, "<html>" + modificado + "</html>");
         }
     }
@@ -165,6 +162,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
         btnPesquisar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelaPrincipal = new javax.swing.JTable();
+        painelDefinicao = new javax.swing.JPanel();
+        lblTermoSelecionado = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txtDefinicaoTermoSelecionado = new javax.swing.JTextArea();
         menuBar = new javax.swing.JMenuBar();
         menuArquivo = new javax.swing.JMenu();
         menuArquivoNovo = new javax.swing.JMenuItem();
@@ -198,6 +199,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         lblPesquisar.setText("Pesquisar");
 
+        txtPesquisar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPesquisarKeyPressed(evt);
+            }
+        });
+
         btnPesquisar.setText("Pesquisar");
         btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -207,14 +214,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         tabelaPrincipal.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null}
+                {null}
             },
             new String [] {
-                "Termo", "Significado", "Fonte"
+                "Termo"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -230,11 +237,40 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tabelaPrincipal);
         if (tabelaPrincipal.getColumnModel().getColumnCount() > 0) {
             tabelaPrincipal.getColumnModel().getColumn(0).setResizable(false);
-            tabelaPrincipal.getColumnModel().getColumn(0).setPreferredWidth(100);
-            tabelaPrincipal.getColumnModel().getColumn(1).setResizable(false);
-            tabelaPrincipal.getColumnModel().getColumn(1).setPreferredWidth(300);
-            tabelaPrincipal.getColumnModel().getColumn(2).setResizable(false);
         }
+
+        painelDefinicao.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        lblTermoSelecionado.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        lblTermoSelecionado.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        txtDefinicaoTermoSelecionado.setEditable(false);
+        txtDefinicaoTermoSelecionado.setColumns(20);
+        txtDefinicaoTermoSelecionado.setLineWrap(true);
+        txtDefinicaoTermoSelecionado.setRows(5);
+        txtDefinicaoTermoSelecionado.setWrapStyleWord(true);
+        jScrollPane2.setViewportView(txtDefinicaoTermoSelecionado);
+
+        javax.swing.GroupLayout painelDefinicaoLayout = new javax.swing.GroupLayout(painelDefinicao);
+        painelDefinicao.setLayout(painelDefinicaoLayout);
+        painelDefinicaoLayout.setHorizontalGroup(
+            painelDefinicaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelDefinicaoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(painelDefinicaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTermoSelecionado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
+                .addContainerGap())
+        );
+        painelDefinicaoLayout.setVerticalGroup(
+            painelDefinicaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelDefinicaoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblTermoSelecionado, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2)
+                .addContainerGap())
+        );
 
         menuArquivo.setText("Arquivo");
 
@@ -275,32 +311,37 @@ public class TelaPrincipal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(painelLetras, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblPesquisar)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnPesquisar)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addContainerGap())
-                    .addComponent(painelLetras, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lblPesquisar)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(txtPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnPesquisar))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(painelDefinicao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(painelLetras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblPesquisar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnPesquisar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lblPesquisar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnPesquisar))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(painelDefinicao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -333,8 +374,22 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
     private void tabelaPrincipalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaPrincipalMouseClicked
-        System.out.println("teste");        // TODO add your handling code here:
+        idTermoSelecionado = (int) tabelaPrincipal.getValueAt(tabelaPrincipal.getSelectedRow(), 1);
+        //idTermoSelecionado = (int) tabelaPrincipal.getSelectedRow();
+        if (evt.getClickCount() == 2) {
+            System.out.println("2 cliques " + idTermoSelecionado);            
+        } else {
+            selecionaTermo(idTermoSelecionado);
+            System.out.println("1 só " + idTermoSelecionado);
+        }
     }//GEN-LAST:event_tabelaPrincipalMouseClicked
+
+    private void txtPesquisarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPesquisarKeyPressed
+        if (evt.getKeyCode() == 10 && !txtPesquisar.getText().isEmpty()) {
+            consultarLista(txtPesquisar.getText());
+            txtPesquisar.setText("");
+        }
+    }//GEN-LAST:event_txtPesquisarKeyPressed
 
     /**
      * @param args the command line arguments
@@ -374,14 +429,18 @@ public class TelaPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnPesquisar;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblPesquisar;
+    private javax.swing.JLabel lblTermoSelecionado;
     private javax.swing.JMenu menuArquivo;
     private javax.swing.JMenuItem menuArquivoNovo;
     private javax.swing.JMenuItem menuArquivoSair;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenu menuSobre;
+    private javax.swing.JPanel painelDefinicao;
     private javax.swing.JPanel painelLetras;
     private javax.swing.JTable tabelaPrincipal;
+    private javax.swing.JTextArea txtDefinicaoTermoSelecionado;
     private javax.swing.JTextField txtPesquisar;
     // End of variables declaration//GEN-END:variables
 }
