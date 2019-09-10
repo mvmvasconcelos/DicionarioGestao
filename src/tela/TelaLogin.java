@@ -6,6 +6,7 @@
 package tela;
 
 import controle.ControleLogin;
+import java.awt.event.KeyEvent;
 
 /**
  *
@@ -51,6 +52,18 @@ public class TelaLogin extends javax.swing.JFrame {
         lblLogin.setText("Login");
 
         lblSenha.setText("Senha");
+
+        txtLogin.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtLoginKeyPressed(evt);
+            }
+        });
+
+        txtSenha.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtSenhaKeyPressed(evt);
+            }
+        });
 
         btnLogar.setText("Logar");
         btnLogar.addActionListener(new java.awt.event.ActionListener() {
@@ -119,6 +132,18 @@ public class TelaLogin extends javax.swing.JFrame {
         controle.logar(txtLogin.getText(), txtSenha.getPassword(), this);
         
     }//GEN-LAST:event_btnLogarActionPerformed
+
+    private void txtLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtLoginKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            txtLogin.transferFocus();
+        }
+    }//GEN-LAST:event_txtLoginKeyPressed
+
+    private void txtSenhaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSenhaKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            controle.logar(txtLogin.getText(), txtSenha.getPassword(), this);
+        }
+    }//GEN-LAST:event_txtSenhaKeyPressed
 
     /**
      * @param args the command line arguments

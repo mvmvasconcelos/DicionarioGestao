@@ -22,10 +22,8 @@ public class ControleLogin {
             TelaPrincipal telaPrincipal = new TelaPrincipal();
             telaPrincipal.setVisible(true);
             j.dispose();
-           // return true;
         } else {
             JOptionPane.showMessageDialog(null, "Usuário ou senha incorretos");
-            //return false;  
         }        
     }
 }

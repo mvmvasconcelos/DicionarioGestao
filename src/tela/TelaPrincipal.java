@@ -9,6 +9,7 @@ import controle.Controlador;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.JButton;
@@ -36,7 +37,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         initComponents();
         criaLetrasAlfabeto();
         consultarLista();
-       // adicionaQuebraDeLinha();
+        System.out.println(controlador.validaIncoerente("$%%$123"));
     }
     
     //Consulta a lista de palavras
@@ -44,15 +45,15 @@ public class TelaPrincipal extends javax.swing.JFrame {
         //Se a lista não estiver vazia
         lista = controlador.consultarTermo().getPalavra();
         Collections.sort(lista, Palavra.comparadorTermo);
-        montaTabela();              
+        montaTabela();
     }
     
     //Consulta a lista de palavras por letra
     private void consultarLista(String palavra){
         lista = controlador.consultarTermo(palavra).getPalavra(); 
         Collections.sort(lista, Palavra.comparadorTermo);
-        System.out.println("tamanho lista" + lista.size());
-        montaTabela();  
+        //System.out.println("tamanho lista" + lista.size());
+        montaTabela();
     }
     
     private void montaTabela(){
@@ -89,6 +90,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             tabelaPrincipal.setAutoResizeMode(3);
             tabelaPrincipal.getColumnModel().getColumn(1).setMinWidth(0);
             tabelaPrincipal.getColumnModel().getColumn(1).setMaxWidth(0);
+            jScrollPane1.getVerticalScrollBar().setValue(0);
         } else { //Se estiver vazia, avisa o usuário
             //exibirMensagem();
             JOptionPane.showMessageDialog(this, "Nenhum termo encontrado");
@@ -103,21 +105,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
                                              + "\nFonte:\n\n"
                                              + controlador.consultarTermo(id).getPalavra().get(0).getFonte());
         txtDefinicaoTermoSelecionado.setCaretPosition(0);
-    }
-    
-    private void adicionaQuebraDeLinha(){
-        //158 caracteres
-        String quebra = "É uma palavra com origem no latim, onde absens significa “estar fora, afastado ou ausente”. O absenteísmo consiste em se abster de alguma atividade ou função.";
-        StringBuilder modificado = new StringBuilder(quebra);
-        int tamanho = 0;
-        if (quebra.length() > 78) {
-            tamanho = (int)(quebra.length() / 78);
-            System.out.println("tamanho " + quebra.length() + ", dá " + tamanho + " pedaços");
-            for (int i = 1; i <= tamanho; i++) {
-                modificado.insert(78*i+2, "<br/>");
-            }            
-            JOptionPane.showMessageDialog(this, "<html>" + modificado + "</html>");
-        }
     }
     
     private void criaLetrasAlfabeto(){
@@ -173,6 +160,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         menuSobre = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Dicionário de Gestão");
         setMaximumSize(new java.awt.Dimension(800, 400));
         setMinimumSize(new java.awt.Dimension(800, 400));
         setPreferredSize(new java.awt.Dimension(800, 400));
@@ -375,17 +363,16 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void tabelaPrincipalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaPrincipalMouseClicked
         idTermoSelecionado = (int) tabelaPrincipal.getValueAt(tabelaPrincipal.getSelectedRow(), 1);
-        //idTermoSelecionado = (int) tabelaPrincipal.getSelectedRow();
         if (evt.getClickCount() == 2) {
-            System.out.println("2 cliques " + idTermoSelecionado);            
+            //System.out.println("2 cliques " + idTermoSelecionado);            
         } else {
             selecionaTermo(idTermoSelecionado);
-            System.out.println("1 só " + idTermoSelecionado);
+            //System.out.println("1 só " + idTermoSelecionado);
         }
     }//GEN-LAST:event_tabelaPrincipalMouseClicked
 
     private void txtPesquisarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPesquisarKeyPressed
-        if (evt.getKeyCode() == 10 && !txtPesquisar.getText().isEmpty()) {
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txtPesquisar.getText().isEmpty()) {
             consultarLista(txtPesquisar.getText());
             txtPesquisar.setText("");
         }

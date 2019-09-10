@@ -58,7 +58,7 @@ public class ControlePalavra {
 
             // necessario fechar o arquivo para finalizar o processo
             arq.fecharArquivo();
-            System.out.println("fechou" + dicionario.getPalavra().size());
+            //System.out.println("fechou" + dicionario.getPalavra().size());
             return true;
         } else {
             return false;

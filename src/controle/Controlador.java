@@ -72,7 +72,7 @@ public class Controlador {
 
         } else if (palavra.length() == 1) {
             dicionarioTemp = ctlPalavra.consultarPorLetra(palavra);
-            System.out.println("Consulta letra");
+            //System.out.println("Consulta letra");
             if (dicionarioTemp != null) {
                 return dicionarioTemp;
             } else {
@@ -81,7 +81,7 @@ public class Controlador {
             }
         } else {
             dicionarioTemp = ctlPalavra.consultarPorTermo(palavra);
-            System.out.println("Consulta palavra");
+            //System.out.println("Consulta palavra");
             if (dicionarioTemp != null) {
                 return dicionarioTemp;
             } else {
@@ -131,6 +131,14 @@ public class Controlador {
                     return true;
                 }
             }
+        }
+        return false;
+    }
+    
+    public boolean validaIncoerente(String string){
+        String splChrs = "-/@#$%^&_+=()" ;
+        if (string.matches("\\d+") || string.matches("[" + splChrs + "]+")) {
+            return true;
         }
         return false;
     }
