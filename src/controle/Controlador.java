@@ -137,7 +137,7 @@ public class Controlador {
     
     public boolean validaIncoerente(String string){
         String splChrs = "-/@#$%^&_+=()" ;
-        if (string.matches("\\d+") || string.matches("[" + splChrs + "]+")) {
+        if (string.matches("[0-9-/@#$%^&_+=() ]+")) {
             return true;
         }
         return false;

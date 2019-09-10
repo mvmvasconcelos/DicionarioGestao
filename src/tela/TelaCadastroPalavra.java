@@ -23,14 +23,20 @@ public class TelaCadastroPalavra extends javax.swing.JFrame {
     }
     
     private void cadastraPalavra(String termo, String definicao, String fonte){
-        if (controlador.validaVazio(termo)) {            
-            JOptionPane.showMessageDialog(this, "O TERMO não pode estar vazio");
+        if (controlador.validaVazio(termo) || termo.length() <= 2) {            
+            JOptionPane.showMessageDialog(this, "O TERMO não pode estar vazio ou menor do que 2 caracteres.");
+        } else if (controlador.validaIncoerente(termo)){
+            JOptionPane.showMessageDialog(this, "O TERMO não pode conter apenas números ou símbolos.");
         } else if(controlador.validaRepetido(termo)){
-            JOptionPane.showMessageDialog(this, "Já existe este termo no dicionário");
-        } else if (controlador.validaVazio(definicao)|| definicao.length() < 20){
-            JOptionPane.showMessageDialog(this, "A DEFINIÇÃO não pode estar vazia ou menor que 20 caracteres");        
-        } else if (controlador.validaVazio(fonte) || fonte.length() < 20){
-            JOptionPane.showMessageDialog(this, "A FONTE não pode estar vazia ou menor que 20 caracteres");   
+            JOptionPane.showMessageDialog(this, "Já existe este termo no dicionário.");
+        } else if (controlador.validaIncoerente(definicao)) {
+            JOptionPane.showMessageDialog(this, "A DEFINIÇÃO não pode conter apenas números ou símbolos.");
+        } else if (controlador.validaVazio(definicao)|| definicao.length() <= 20){
+            JOptionPane.showMessageDialog(this, "A DEFINIÇÃO não pode estar vazia ou menor que 20 caracteres.");        
+        } else if (controlador.validaVazio(fonte) || fonte.length() <= 20){
+            JOptionPane.showMessageDialog(this, "A FONTE não pode estar vazia ou menor que 20 caracteres.");   
+        } else if (controlador.validaIncoerente(fonte)){
+            JOptionPane.showMessageDialog(this, "A FONTE pode conter apenas números ou símbolos.");   
         } else {
             controlador.cadastraNovaPalavra(controlador.mudaPontoEVirgula(termo), controlador.mudaPontoEVirgula(definicao), controlador.mudaPontoEVirgula(fonte));
             JOptionPane.showMessageDialog(this, "Termo cadastrado com sucesso!");

@@ -164,5 +164,4 @@
 163;Verificação;Comprovação, através de fornecimento de evidência objetiva, de que requisitos especificados foram atendidos;https://sites.google.com/site/planejaweb/dicionario-de-gestao
 164;Workaholic;Pessoa viciada em trabalho;https://www.rhportal.com.br/artigos-rh/dicionrio-corporativs/
 165;Workshop;Treinamento em grupo de acordo com a técnica dominada pelo instrutor, que visa ao aprendizado de novas práticas para o trabalho;https://www.rhportal.com.br/artigos-rh/dicionrio-corporativs/
-166;AALGO;tesrmosas;teste
-167;Cadastro;nova palavra, ter ponto e vírugula,, e outros;fonte é necessária ,aasdf ou iés
+166;z teste;Novo termo definição para vídeo;fonte de exemplo para video

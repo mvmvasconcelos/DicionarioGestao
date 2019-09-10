@@ -14,8 +14,8 @@ import tela.TelaPrincipal;
  * @author vinicius
  */
 public class ControleLogin {
-    private String usuario = "";
-    private String senha = "";
+    private String usuario = "usuario";
+    private String senha = "1234";
     
     public void logar(String user, char[] pass, JFrame j){
         if (usuario.equals(user) && senha.equals(new String(pass))) {

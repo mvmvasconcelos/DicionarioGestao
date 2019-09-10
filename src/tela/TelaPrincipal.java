@@ -6,17 +6,13 @@
 package tela;
 
 import controle.Controlador;
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.JButton;
-import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 import negocio.Palavra;
 
@@ -25,9 +21,9 @@ import negocio.Palavra;
  * @author vinicius
  */
 public class TelaPrincipal extends javax.swing.JFrame {
-    Controlador controlador = new Controlador();
-    ArrayList<Palavra> lista = new ArrayList<>();
-    DefaultTableModel tabela; //Cria modelo de tabela
+    private Controlador controlador = new Controlador();
+    private ArrayList<Palavra> lista = new ArrayList<>();
+    private DefaultTableModel tabela; //Cria modelo de tabela
     private int idTermoSelecionado;
     
     /**
@@ -37,7 +33,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
         initComponents();
         criaLetrasAlfabeto();
         consultarLista();
-        System.out.println(controlador.validaIncoerente("$%%$123"));
     }
     
     //Consulta a lista de palavras
@@ -50,10 +45,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
     
     //Consulta a lista de palavras por letra
     private void consultarLista(String palavra){
-        lista = controlador.consultarTermo(palavra).getPalavra(); 
-        Collections.sort(lista, Palavra.comparadorTermo);
-        //System.out.println("tamanho lista" + lista.size());
-        montaTabela();
+        if (palavra.length() > 0) {
+            lista = controlador.consultarTermo(palavra).getPalavra(); 
+            Collections.sort(lista, Palavra.comparadorTermo);
+            //System.out.println("tamanho lista" + lista.size());
+            montaTabela();
+        } else {
+            JOptionPane.showMessageDialog(null, "Nenhum termo digitado");
+        }        
     }
     
     private void montaTabela(){
@@ -91,8 +90,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             tabelaPrincipal.getColumnModel().getColumn(1).setMinWidth(0);
             tabelaPrincipal.getColumnModel().getColumn(1).setMaxWidth(0);
             jScrollPane1.getVerticalScrollBar().setValue(0);
-        } else { //Se estiver vazia, avisa o usuário
-            //exibirMensagem();
+        } else {
             JOptionPane.showMessageDialog(this, "Nenhum termo encontrado");
         }  
     }
@@ -111,7 +109,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         //Define o painelLetras com layout fluido
         painelLetras.setLayout(new FlowLayout());
         //Força dimensão do painel
-        painelLetras.setPreferredSize(new Dimension(788, 100));
+        painelLetras.setPreferredSize(new Dimension(780, 100));
         
         //Para cada letra do alfabeto
         for (int i = 0; i < controlador.getAlfabeto().length; i++) {
@@ -156,14 +154,19 @@ public class TelaPrincipal extends javax.swing.JFrame {
         menuBar = new javax.swing.JMenuBar();
         menuArquivo = new javax.swing.JMenu();
         menuArquivoNovo = new javax.swing.JMenuItem();
+        menuArquivoListar = new javax.swing.JMenuItem();
         menuArquivoSair = new javax.swing.JMenuItem();
-        menuSobre = new javax.swing.JMenu();
+        menuAjuda = new javax.swing.JMenu();
+        menuAjudaToDo = new javax.swing.JMenuItem();
+        menuAjudaSobre = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Dicionário de Gestão");
         setMaximumSize(new java.awt.Dimension(800, 400));
         setMinimumSize(new java.awt.Dimension(800, 400));
         setPreferredSize(new java.awt.Dimension(800, 400));
+        setResizable(false);
+        setSize(new java.awt.Dimension(800, 400));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
@@ -171,14 +174,15 @@ public class TelaPrincipal extends javax.swing.JFrame {
         });
 
         painelLetras.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        painelLetras.setMaximumSize(new java.awt.Dimension(788, 100));
-        painelLetras.setMinimumSize(new java.awt.Dimension(788, 100));
+        painelLetras.setMaximumSize(new java.awt.Dimension(780, 100));
+        painelLetras.setMinimumSize(new java.awt.Dimension(780, 100));
+        painelLetras.setPreferredSize(new java.awt.Dimension(780, 100));
 
         javax.swing.GroupLayout painelLetrasLayout = new javax.swing.GroupLayout(painelLetras);
         painelLetras.setLayout(painelLetrasLayout);
         painelLetrasLayout.setHorizontalGroup(
             painelLetrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 790, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         painelLetrasLayout.setVerticalGroup(
             painelLetrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -247,7 +251,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(painelDefinicaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblTermoSelecionado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE))
                 .addContainerGap())
         );
         painelDefinicaoLayout.setVerticalGroup(
@@ -271,6 +275,15 @@ public class TelaPrincipal extends javax.swing.JFrame {
         });
         menuArquivo.add(menuArquivoNovo);
 
+        menuArquivoListar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_MASK));
+        menuArquivoListar.setText("Listar Tudo");
+        menuArquivoListar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuArquivoListarActionPerformed(evt);
+            }
+        });
+        menuArquivo.add(menuArquivoListar);
+
         menuArquivoSair.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
         menuArquivoSair.setText("Sair");
         menuArquivoSair.addActionListener(new java.awt.event.ActionListener() {
@@ -282,13 +295,25 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         menuBar.add(menuArquivo);
 
-        menuSobre.setText("Sobre");
-        menuSobre.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                menuSobreMouseClicked(evt);
+        menuAjuda.setText("Ajuda");
+
+        menuAjudaToDo.setText("ToDo List");
+        menuAjudaToDo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuAjudaToDoActionPerformed(evt);
             }
         });
-        menuBar.add(menuSobre);
+        menuAjuda.add(menuAjudaToDo);
+
+        menuAjudaSobre.setText("Sobre");
+        menuAjudaSobre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuAjudaSobreActionPerformed(evt);
+            }
+        });
+        menuAjuda.add(menuAjudaSobre);
+
+        menuBar.add(menuAjuda);
 
         setJMenuBar(menuBar);
 
@@ -299,19 +324,21 @@ public class TelaPrincipal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(painelLetras, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(painelLetras, javax.swing.GroupLayout.DEFAULT_SIZE, 784, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lblPesquisar)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(lblPesquisar))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(txtPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(btnPesquisar))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(painelDefinicao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
+                        .addComponent(painelDefinicao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -341,10 +368,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
         TelaLogin telaLogin = new TelaLogin();
         telaLogin.setVisible(true);
     }//GEN-LAST:event_formWindowClosed
-
-    private void menuSobreMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuSobreMouseClicked
-        JOptionPane.showMessageDialog(this, "Dicionário de Gestão");
-    }//GEN-LAST:event_menuSobreMouseClicked
 
     private void menuArquivoSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuArquivoSairActionPerformed
         TelaLogin telaLogin = new TelaLogin();
@@ -377,6 +400,22 @@ public class TelaPrincipal extends javax.swing.JFrame {
             txtPesquisar.setText("");
         }
     }//GEN-LAST:event_txtPesquisarKeyPressed
+
+    private void menuArquivoListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuArquivoListarActionPerformed
+        consultarLista();
+    }//GEN-LAST:event_menuArquivoListarActionPerformed
+
+    private void menuAjudaSobreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAjudaSobreActionPerformed
+        JOptionPane.showMessageDialog(this, "Dicionário de Gestão\n"
+                + "Criado por Marcus Vasconcelos\n"
+                + "2019");
+    }//GEN-LAST:event_menuAjudaSobreActionPerformed
+
+    private void menuAjudaToDoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAjudaToDoActionPerformed
+        JOptionPane.showMessageDialog(this,"- Cadastro/edição usuário\n"
+                + "- Edição/remoção termo\n"
+                + "- Correção de bugs");
+    }//GEN-LAST:event_menuAjudaToDoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -419,11 +458,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblPesquisar;
     private javax.swing.JLabel lblTermoSelecionado;
+    private javax.swing.JMenu menuAjuda;
+    private javax.swing.JMenuItem menuAjudaSobre;
+    private javax.swing.JMenuItem menuAjudaToDo;
     private javax.swing.JMenu menuArquivo;
+    private javax.swing.JMenuItem menuArquivoListar;
     private javax.swing.JMenuItem menuArquivoNovo;
     private javax.swing.JMenuItem menuArquivoSair;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenu menuSobre;
     private javax.swing.JPanel painelDefinicao;
     private javax.swing.JPanel painelLetras;
     private javax.swing.JTable tabelaPrincipal;
