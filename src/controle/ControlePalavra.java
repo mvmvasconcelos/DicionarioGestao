@@ -79,13 +79,22 @@ public class ControlePalavra {
      * @return apenasId - dicionário apenas com os termos da letra especificada
      */
     public Dicionario consultarPorLetra(String letra){
-        Dicionario apenasId = new Dicionario();
-        for (int i = 0; i < dicionario.getPalavra().size(); i++) {
-            if (dicionario.getPalavra().get(i).getTermo().toLowerCase().charAt(0) == letra.toLowerCase().charAt(0)) {
-                apenasId.setPalavra(dicionario.getPalavra().get(i));
+        Dicionario apenasId = new Dicionario();        
+        if (letra.equals("#")) {
+            for (int i = 0; i < dicionario.getPalavra().size(); i++) {
+                if (String.valueOf(dicionario.getPalavra().get(i).getTermo().toLowerCase().charAt(0)).matches("[0-9]")) {
+                    apenasId.setPalavra(dicionario.getPalavra().get(i));
+                }
             }
+            return apenasId;
+        } else {
+            for (int i = 0; i < dicionario.getPalavra().size(); i++) {
+                if (dicionario.getPalavra().get(i).getTermo().toLowerCase().charAt(0) == letra.toLowerCase().charAt(0)) {
+                    apenasId.setPalavra(dicionario.getPalavra().get(i));
+                }
+            }
+            return apenasId;
         }
-        return apenasId;
     }
     
     /**Faz a consulta pelo termo pesquisado

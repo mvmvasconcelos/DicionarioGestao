@@ -99,11 +99,7 @@ public class Controlador {
      */
     public boolean validaVazio(String t){
         try {
-            if (t.isBlank() || t.isEmpty()) {
-                return true;
-            } else {
-                return false;
-            }
+            return t.isBlank() || t.isEmpty();
         } catch (Exception e) {            
             return true;
         }
@@ -121,6 +117,7 @@ public class Controlador {
     
     /** Método para validar termos repetidos
      * 
+     * @param termo
      * @return 
      */
     public boolean validaRepetido(String termo){
@@ -137,10 +134,7 @@ public class Controlador {
     
     public boolean validaIncoerente(String string){
         String splChrs = "-/@#$%^&_+=()" ;
-        if (string.matches("[0-9-/@#$%^&_+=() ]+")) {
-            return true;
-        }
-        return false;
+        return string.matches("[0-9-/@#$%^&_+=() ]+");
     }
     
     public String mudaPontoEVirgula(String string){        

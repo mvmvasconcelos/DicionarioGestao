@@ -50,6 +50,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
             Collections.sort(lista, Palavra.comparadorTermo);
             //System.out.println("tamanho lista" + lista.size());
             montaTabela();
+            if (palavra.length() == 1) {
+                tabelaPrincipal.getColumnModel().getColumn(0).setHeaderValue("Termos iniciados com \"" + palavra + "\"");
+            } else {
+                tabelaPrincipal.getColumnModel().getColumn(0).setHeaderValue("Termos contendo \"" + palavra + "\"");                
+            }
+            tabelaPrincipal.getTableHeader().repaint();
         } else {
             JOptionPane.showMessageDialog(null, "Nenhum termo digitado");
         }        
@@ -62,7 +68,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             tabelaPrincipal.setModel(new javax.swing.table.DefaultTableModel(
                 new Object [][] {},
                 new String [] {
-                     "Termo", "id"
+                     "Termos", "id"
                 })
                 {
                 boolean[] canEdit = new boolean [] {
@@ -95,6 +101,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
         }  
     }
     
+    /** Recebe o id do termo selecionado na tabela e exibe as informações
+     * 
+     * @param id - retirado da coluna 1
+     */
     private void selecionaTermo(int id){
         lblTermoSelecionado.setText(controlador.consultarTermo(id).getPalavra().get(0).getTermo());
         txtDefinicaoTermoSelecionado.setText("Definição:\n\n" 
@@ -157,7 +167,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
         menuArquivoListar = new javax.swing.JMenuItem();
         menuArquivoSair = new javax.swing.JMenuItem();
         menuAjuda = new javax.swing.JMenu();
-        menuAjudaToDo = new javax.swing.JMenuItem();
         menuAjudaSobre = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -297,14 +306,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         menuAjuda.setText("Ajuda");
 
-        menuAjudaToDo.setText("ToDo List");
-        menuAjudaToDo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuAjudaToDoActionPerformed(evt);
-            }
-        });
-        menuAjuda.add(menuAjudaToDo);
-
         menuAjudaSobre.setText("Sobre");
         menuAjudaSobre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -381,7 +382,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_menuArquivoNovoActionPerformed
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
-        consultarLista(txtPesquisar.getText());
+        consultarLista(txtPesquisar.getText());  
+        txtPesquisar.setText("");        
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
     private void tabelaPrincipalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaPrincipalMouseClicked
@@ -410,12 +412,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 + "Criado por Marcus Vasconcelos\n"
                 + "2019");
     }//GEN-LAST:event_menuAjudaSobreActionPerformed
-
-    private void menuAjudaToDoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAjudaToDoActionPerformed
-        JOptionPane.showMessageDialog(this,"- Cadastro/edição usuário\n"
-                + "- Edição/remoção termo\n"
-                + "- Correção de bugs");
-    }//GEN-LAST:event_menuAjudaToDoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -460,7 +456,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel lblTermoSelecionado;
     private javax.swing.JMenu menuAjuda;
     private javax.swing.JMenuItem menuAjudaSobre;
-    private javax.swing.JMenuItem menuAjudaToDo;
     private javax.swing.JMenu menuArquivo;
     private javax.swing.JMenuItem menuArquivoListar;
     private javax.swing.JMenuItem menuArquivoNovo;
